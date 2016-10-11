@@ -6,6 +6,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
     data: any[] = [];
+    hash = {};
+
     constructor(){
         this.data =
         [
@@ -52,34 +54,66 @@ export class AppComponent {
                     }]
             }
         ]
+
+        this.hash = this.buildDataHierarchy(this.data);
     }
-    nodeSelected(toggleNode: any){
+
+    buildDataHierarchy(data): any {
+        let id = 1;
+        let hash = {};
+        let setNodeID = (node : any, parentId: number) => {
+            hash[id] = node;
+            node['nodeId'] = id;
+            node['parentNodeId'] = parentId;
+            if (node.children.length){
+                const parentId = id;
+                node.children.forEach(function(node: any){
+                    id++;
+                    setNodeID(node, parentId);
+                });
+            }
+            id++;
+        }
+        data.forEach(function(node: any){
+            setNodeID(node, 0);
+        });
+        return hash;
+    }
+    nodeSelected(toggleNode: any) {
         // select / unselect all children (recursive)
         let toggleChildren = (node: any) => {
-            node.children.forEach(function(child: any) {
+            node.children.forEach(function (child: any) {
                 child.selected = node.selected;
-                if (child.children.length){
+                if (child.children.length) {
                     toggleChildren(child);
                 }
             });
         }
         toggleChildren(toggleNode);
 
-        // update parent if needed (recursive)
-        // let updateParent = (cat: Category) => {
-        //     if (cat.parentId != "0") {
-        //         const parentCat = this.categoriesMap[cat.parentId];
-        //         const siblings = parentCat.children;
-        //         parentCat.partialSelection = false;
-        //         if ( R.find(R.propEq('selected', !cat.selected))(siblings) === undefined){
-        //             parentCat.selected = cat.selected;
-        //             if (parentCat.parentId != "0"){
-        //                 updateParent(parentCat);
-        //             }
-        //         }else{
-        //             parentCat.partialSelection = true;
-        //         }
-        //     }
-        // }
-        //updateParent(toggleNode);
+        //update parent if needed (recursive)
+        let updateParent = (node: any) => {
+            if (node.parentNodeId != 0) {
+                const parentNode = this.hash[node.parentNodeId];
+                const siblings = parentNode.children;
+                parentNode.partialSelection = false;
+                let equalSiblings = true;
+                siblings.forEach(function(sibling){
+                    if (sibling.selected !== node.selected){
+                        equalSiblings = false;
+                    }
+                });
+                if (equalSiblings){
+                    parentNode.selected = node.selected;
+                    if (parentNode.parentNodeId != 0){
+                        updateParent(parentNode);
+                    }
+                }else{
+                    parentNode.partialSelection = true;
+                }
+            }
+        }
+        updateParent(toggleNode);
+    }
+
 }
