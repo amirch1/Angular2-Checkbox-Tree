@@ -8,49 +8,39 @@ export class AppComponent {
     data: any[] = [];
     hash = {};
 
+    selectedNodes: any[] = [];
+
     constructor(){
         this.data =
         [
             {
-                "selected": false,
                 "label": "Documents",
-                "data": "Documents Folder",
                 "children": [{
-                        "selected": false,
                         "label": "Work",
-                        "data": "Work Folder",
-                        "children": [{"selected": false, "label": "Expenses.doc", "data": "Expenses Document", "children":[]}, {"selected": false, "label": "Resume.doc", "data": "Resume Document", "children":[]}]
+                        "children": [{"label": "Expenses.doc", "children":[]}, {"label": "Resume.doc", "children":[]}]
                     },
                     {
                         "selected": false,
                         "label": "Home",
-                        "data": "Home Folder",
-                        "children": [{"selected": false, "label": "Invoices.txt", "data": "Invoices for this month", "children":[]}]
+                        "children": [{"label": "Invoices.txt", "children":[]}]
                     }]
             },
             {
-                "selected": false,
                 "label": "Pictures",
-                "data": "Pictures Folder",
                 "children": [
-                    {"selected": false, "label": "barcelona.jpg", "data": "Barcelona Photo", "children":[]},
-                    {"selected": false, "label": "logo.jpg", "data": "PrimeFaces Logo", "children":[]},
-                    {"selected": false, "label": "primeui.png", "data": "PrimeUI Logo", "children":[]}]
+                    {"label": "barcelona.jpg", "children":[]},
+                    {"label": "logo.jpg", "children":[]},
+                    {"label": "primeui.png", "children":[]}]
             },
             {
-                "selected": false,
                 "label": "Movies",
-                "data": "Movies Folder",
                 "children": [{
-                    "selected": false,
-                    "label": "Al Pacino",
-                    "data": "Pacino Movies",
-                    "children": [{"selected": false, "label": "Scarface", "data": "Scarface Movie", "children":[]}, {"selected": false,"label": "Serpico", "data": "Serpico Movie", "children":[]}]
-                },
+                        "label": "Al Pacino",
+                        "children": [{"label": "Scarface", "data": "Scarface Movie", "children":[]}, {"label": "Serpico", "data": "Serpico Movie", "children":[]}]
+                    },
                     {
                         "label": "Robert De Niro",
-                        "data": "De Niro Movies",
-                        "children": [{"selected": false, "label": "Goodfellas", "data": "Goodfellas Movie", "children":[]}, {"selected": false, "label": "Untouchables", "data": "Untouchables Movie", "children":[]}]
+                        "children": [{"label": "Goodfellas", "children":[]}, {"label": "Untouchables", "children":[]}]
                     }]
             }
         ]
@@ -58,11 +48,12 @@ export class AppComponent {
         this.hash = this.buildDataHierarchy(this.data);
     }
 
-    buildDataHierarchy(data): any {
+    buildDataHierarchy(data: any[]): any {
         let id = 1;
         let hash = {};
         let setNodeID = (node : any, parentId: number) => {
             hash[id] = node;
+            node['selected'] = false;
             node['nodeId'] = id;
             node['parentNodeId'] = parentId;
             if (node.children.length){
@@ -79,6 +70,7 @@ export class AppComponent {
         });
         return hash;
     }
+
     nodeSelected(toggleNode: any) {
         // select / unselect all children (recursive)
         let toggleChildren = (node: any) => {
@@ -98,7 +90,7 @@ export class AppComponent {
                 const siblings = parentNode.children;
                 parentNode.partialSelection = false;
                 let equalSiblings = true;
-                siblings.forEach(function(sibling){
+                siblings.forEach(function(sibling: any){
                     if (sibling.selected !== node.selected){
                         equalSiblings = false;
                     }
@@ -114,6 +106,22 @@ export class AppComponent {
             }
         }
         updateParent(toggleNode);
+        this.updateSelected();
+    }
+
+    updateSelected(){
+        this.selectedNodes = [];
+        for (let node in this.hash) {
+            if (this.hash[node].selected) {
+                let currentNode = this.hash[node];
+                let nodeLabel = currentNode['label'];
+                while (currentNode.parentNodeId !==0){
+                    currentNode = this.hash[currentNode.parentNodeId];
+                    nodeLabel = currentNode['label'] + ' > ' + nodeLabel;
+                }
+                this.selectedNodes.push(nodeLabel);
+            }
+        }
     }
 
 }
