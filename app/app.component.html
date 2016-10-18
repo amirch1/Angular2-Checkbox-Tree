@@ -4,7 +4,7 @@
         <input type="checkbox" [(ngModel)]="node.selected" [indeterminate]="node.partialSelection" (ngModelChange)="nodeSelected(node)"><span style="margin-left: 6px">{{node.label}}</span>
     </template>
 </p-tree>
-<p>Selected Nodes:</p>
+<p>Selected Nodes: <span [hidden]="selectedNodes.length">No nodes selected.</span></p>
 <ul>
     <li *ngFor="let node of selectedNodes">{{node}}</li>
 </ul>
