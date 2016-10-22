@@ -2,7 +2,8 @@
 
 This repository holds the TypeScript source code for an Angular 2 checkbox tree.<br>
 The checkbox tree is based on the open source <a href="https://github.com/primefaces/primeng" target="_blank">PrimeNG tree component</a><br>
-The tree supports partial selection when only some children are selected.
+The tree supports partial selection when only some children are selected.<br>
+You can use <a href="http://www.primefaces.org/primeng/#/tree" target="_blank">PrimeNG tree attributes</a> to customize the tree look and feel.
 
 ## Demo
 A working demo can be viewed here: <a href="https://amirch1.github.io/Angular2-Checkbox-Tree/" target="_blank">https://amirch1.github.io/Angular2-Checkbox-Tree/</a>
