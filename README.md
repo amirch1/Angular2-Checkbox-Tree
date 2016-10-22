@@ -1,6 +1,6 @@
-# Angular2Checkbox Tree
+# Angular2 Checkbox Tree
 
-This repository holds the TypeScript source code for an Angular 2 checkbox tree.
+This repository holds the TypeScript source code for an Angular 2 checkbox tree.<br>
 The checkbox tree is based on <a href="https://github.com/primefaces/primeng" target="_blank">PrimeNG tree component</a>
 
 ## Prerequisites
