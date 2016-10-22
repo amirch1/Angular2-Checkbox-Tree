@@ -36,4 +36,7 @@ Both the compiler and the server watch for file changes.
 
 Shut it down manually with Ctrl-C.
 
-You're ready to write your application.
+
+##License
+The code is distributed under the MIT License (MIT). 
+
