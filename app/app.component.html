@@ -1,7 +1,7 @@
 <p>Angular 2 Checkbox Tree</p>
 <p-tree [value]="data">
     <template let-node  pTemplate type="default">
-        <input type="checkbox" [(ngModel)]="node.selected" [indeterminate]="node.partialSelection" (ngModelChange)="nodeSelected(node)"><span style="margin-left: 6px">{{node.label}}</span>
+        <input type="checkbox" [(ngModel)]="node.selected" [indeterminate]="node.partialSelection" (ngModelChange)="nodeSelected(node)"><span style="margin-left: 6px">{{ node[labelKey] }}</span>
     </template>
 </p-tree>
 <p>Selected Nodes: <span [hidden]="selectedNodes.length">No nodes selected.</span></p>
