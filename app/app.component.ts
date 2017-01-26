@@ -8,6 +8,9 @@ export class AppComponent {
     data: any[] = [];
     hash = {};
 
+    public childKey: string = 'children';
+    public labelKey: string = 'label';
+
     selectedNodes: any[] = [];
 
     constructor(){
@@ -56,9 +59,9 @@ export class AppComponent {
             node['selected'] = false;
             node['nodeId'] = id;
             node['parentNodeId'] = parentId;
-            if (node.children.length){
+            if (node[this.childKey].length){
                 const parentId = id;
-                node.children.forEach(function(node: any){
+                node[this.childKey].forEach(function(node: any){
                     id++;
                     setNodeID(node, parentId);
                 });
@@ -74,9 +77,9 @@ export class AppComponent {
     nodeSelected(toggleNode: any) {
         // select / unselect all children (recursive)
         let toggleChildren = (node: any) => {
-            node.children.forEach(function (child: any) {
+            node[this.childKey].forEach((child: any) => {
                 child.selected = node.selected;
-                if (child.children.length) {
+                if (child[this.childKey].length) {
                     toggleChildren(child);
                 }
             });
@@ -87,7 +90,7 @@ export class AppComponent {
         let updateParent = (node: any) => {
             if (node.parentNodeId != 0) {
                 const parentNode = this.hash[node.parentNodeId];
-                const siblings = parentNode.children;
+                const siblings = parentNode[this.childKey];
                 parentNode.partialSelection = false;
                 let equalSiblings = true;
                 siblings.forEach(function(sibling: any){
@@ -114,10 +117,10 @@ export class AppComponent {
         for (let node in this.hash) {
             if (this.hash[node].selected) {
                 let currentNode = this.hash[node];
-                let nodeLabel = currentNode['label'];
+                let nodeLabel = currentNode[this.labelKey];
                 while (currentNode.parentNodeId !==0){
                     currentNode = this.hash[currentNode.parentNodeId];
-                    nodeLabel = currentNode['label'] + ' > ' + nodeLabel;
+                    nodeLabel = currentNode[this.labelKey] + ' > ' + nodeLabel;
                 }
                 this.selectedNodes.push(nodeLabel);
             }
