@@ -86,7 +86,7 @@ export class AppComponent {
         //update parent if needed (recursive)
         let updateParent = (node: any) => {
             if (node.parentNodeId != 0) {
-                const parentNode = this.hash[node.parentNodeId];
+                let parentNode = this.hash[node.parentNodeId];
                 const siblings = parentNode.children;
                 parentNode.partialSelection = false;
                 let equalSiblings = true;
@@ -101,7 +101,10 @@ export class AppComponent {
                         updateParent(parentNode);
                     }
                 }else{
-                    parentNode.partialSelection = true;
+                    while (parentNode) {
+                        parentNode.partialSelection = true;
+                        parentNode = parentNode.parent;
+                    }
                 }
             }
         }
